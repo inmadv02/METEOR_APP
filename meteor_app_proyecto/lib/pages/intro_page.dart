@@ -10,10 +10,12 @@ class IntroPage extends StatefulWidget {
 
 class _IntroPageState extends State<IntroPage> {
   List<String> listaCiudades = ["Sevilla", "Londres", "Madrid", "Barcelona"];
+  String ciudadEjemplo = "Sevilla";
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return Scaffold(
+        body: Stack(children: [
       Container(
           width: MediaQuery.of(context).size.width * 1,
           height: MediaQuery.of(context).size.height * 1,
@@ -25,27 +27,61 @@ class _IntroPageState extends State<IntroPage> {
             SizedBox(
                 child: Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: Image.asset('assets/images/logo.png'))),
+                    child: Image.asset('assets/images/logo.png',
+                        width: MediaQuery.of(context).size.width * 0.11))),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(3, 3, 3, 50),
+                child: Text('Meteor'.toUpperCase(), style: Styles.textLogo)),
             Padding(
                 padding: const EdgeInsets.fromLTRB(3, 3, 3, 20),
-                child: Text('Meteor', style: Styles.textLogo)),
+                child:
+                    Text('Elige tu ciudad', style: Styles.textTitleCustom(23))),
             Padding(
-                padding: const EdgeInsets.fromLTRB(3, 3, 3, 20),
-                child: Text('Elige tu ciudad', style: Styles.textTitle)),
-            Padding(
-                padding: const EdgeInsets.fromLTRB(3, 20, 3, 3),
-                child: DropdownButton<String>(
-                  items: listaCiudades.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (_) {},
-                  style: const TextStyle(backgroundColor: Styles.moradoCard),
-                ))
+                padding: const EdgeInsets.fromLTRB(3, 20, 3, 50),
+                child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    decoration: BoxDecoration(
+                        color: Styles.moradoCard,
+                        borderRadius: BorderRadius.circular(18.0)),
+                    child: DropdownButton(
+                      icon: const Icon(Icons.search,
+                          color: Colors.black, size: 25),
+                      isExpanded: true,
+                      dropdownColor: Styles.moradoCard,
+                      value: ciudadEjemplo,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          ciudadEjemplo = newValue!;
+                        });
+                      },
+                      items: listaCiudades
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      style: Styles.textNormalCustom(
+                          16, Styles.bodyBackground, FontWeight.normal),
+                    ))),
+            SizedBox(
+                width: MediaQuery.of(context).size.width * 0.35,
+                height: MediaQuery.of(context).size.height * 0.06,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Styles.blanco),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.0))),
+                    ),
+                    onPressed: () {},
+                    child: Text('Entrar'.toUpperCase(),
+                        style: Styles.textNormalCustom(
+                            14,
+                            const Color.fromRGBO(16, 26, 57, 1),
+                            FontWeight.w900))))
           ])),
-          ElevatedButton(onPressed: , child:)
-    ]);
+    ]));
   }
 }
