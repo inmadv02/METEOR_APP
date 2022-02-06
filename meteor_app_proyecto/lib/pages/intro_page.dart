@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meteor_app_proyecto/models/location_response.dart';
 import 'package:meteor_app_proyecto/styles.dart';
 
 class IntroPage extends StatefulWidget {
@@ -10,7 +11,7 @@ class IntroPage extends StatefulWidget {
 
 class _IntroPageState extends State<IntroPage> {
   List<String> listaCiudades = ["Sevilla", "Londres", "Madrid", "Barcelona"];
-  String ciudadEjemplo = "Sevilla";
+  late Location ciudadEjemplo;
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +51,10 @@ class _IntroPageState extends State<IntroPage> {
                           color: Colors.black, size: 25),
                       isExpanded: true,
                       dropdownColor: Styles.moradoCard,
-                      value: ciudadEjemplo,
+                      value: ciudadEjemplo.name,
                       onChanged: (String? newValue) {
                         setState(() {
-                          ciudadEjemplo = newValue!;
+                          ciudadEjemplo.name = newValue!;
                         });
                       },
                       items: listaCiudades
@@ -75,7 +76,8 @@ class _IntroPageState extends State<IntroPage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7.0))),
                     ),
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(context, '/location',
+                        arguments: ciudadEjemplo),
                     child: Text('Entrar'.toUpperCase(),
                         style: Styles.textNormalCustom(
                             14,
