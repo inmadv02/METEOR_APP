@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meteor_app_proyecto/pages/intro_page.dart';
+import 'package:meteor_app_proyecto/pages/location_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const IntroPage(),
+        '/location': (context) => const LocationPage()
       },
     );
   }

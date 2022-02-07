@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meteor_app_proyecto/models/location_response.dart';
 import 'package:meteor_app_proyecto/styles.dart';
+import 'package:meteor_app_proyecto/utils/preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroPage extends StatefulWidget {
   const IntroPage({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class IntroPage extends StatefulWidget {
 
 class _IntroPageState extends State<IntroPage> {
   List<String> listaCiudades = ["Sevilla", "Londres", "Madrid", "Barcelona"];
-  late Location ciudadEjemplo;
+  String ciudadEjemplo = "Sevilla";
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +53,11 @@ class _IntroPageState extends State<IntroPage> {
                           color: Colors.black, size: 25),
                       isExpanded: true,
                       dropdownColor: Styles.moradoCard,
-                      value: ciudadEjemplo.name,
+                      value: ciudadEjemplo,
                       onChanged: (String? newValue) {
                         setState(() {
-                          ciudadEjemplo.name = newValue!;
+                          ciudadEjemplo = newValue!;
+                          PreferenceUtils.setString("ciudad", ciudadEjemplo);
                         });
                       },
                       items: listaCiudades

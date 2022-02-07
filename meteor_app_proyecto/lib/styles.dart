@@ -21,10 +21,16 @@ class Styles {
   static TextStyle get textLogo => GoogleFonts.getFont(
         'Poppins',
         color: Styles.blanco,
-        fontSize: 24,
+        fontSize: 23.5,
         fontWeight: FontWeight.w600,
         letterSpacing: 6,
       );
+
+  static TextStyle textLogoCustom(double size) => GoogleFonts.getFont('Poppins',
+      color: Styles.blanco,
+      fontSize: size,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 6);
 
   static TextStyle textNormalCustom(
           double size, Color c, FontWeight fontWeight) =>
