@@ -57,7 +57,6 @@ class _IntroPageState extends State<IntroPage> {
                       onChanged: (String? newValue) {
                         setState(() {
                           ciudadEjemplo = newValue!;
-                          PreferenceUtils.setString("ciudad", ciudadEjemplo);
                         });
                       },
                       items: listaCiudades

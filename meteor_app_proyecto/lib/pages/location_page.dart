@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meteor_app_proyecto/models/location_response.dart';
+import 'package:meteor_app_proyecto/services/location_service.dart';
 import 'package:meteor_app_proyecto/styles.dart';
-
-/*class LocationWeather {
-  final String ciudad;
-  LocationWeather(this.ciudad);
-}*/
 
 class LocationPage extends StatefulWidget {
   const LocationPage({Key? key}) : super(key: key);
@@ -15,9 +11,19 @@ class LocationPage extends StatefulWidget {
 }
 
 class _LocationPageState extends State<LocationPage> {
+  /* late LocationService locationService;
+  String ciudad = '';
+
+  @override
+  void initState() {
+    locationService = LocationService();
+    locationService.getCity(ciudad);
+    super.initState();
+  }*/
+
   @override
   Widget build(BuildContext context) {
-    //final args = ModalRoute.of(context)!.settings.arguments as LocationWeather;
+    //final args = ModalRoute.of(context)!.settings.arguments as Location;
 
     return Scaffold(
         body: Stack(children: [
@@ -54,6 +60,7 @@ class _LocationPageState extends State<LocationPage> {
               Image.asset('assets/icons/09n.png',
                   width: MediaQuery.of(context).size.width * 0.45),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                 Text('26ºC',
                     style: Styles.textNormalCustom(
                         60, Styles.blanco, FontWeight.w600)),
@@ -87,7 +94,68 @@ class _LocationPageState extends State<LocationPage> {
                             ))
                       ],
                     )),
-              ])
+              ]),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 25, 5, 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Humedad',
+                                style: Styles.textNormalCustom(
+                                    14, Styles.blanco, FontWeight.w300)),
+                            Text('60%',
+                                style: Styles.textNormalCustom(
+                                    17, Styles.blanco, FontWeight.w600))
+                          ]),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Viento',
+                                style: Styles.textNormalCustom(
+                                    14, Styles.blanco, FontWeight.w300)),
+                            Text('3km/h',
+                                style: Styles.textNormalCustom(
+                                    17, Styles.blanco, FontWeight.w600))
+                          ]),
+                    ],
+                  )),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 10, 5, 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Sens. térmica',
+                                style: Styles.textNormalCustom(
+                                    14, Styles.blanco, FontWeight.w300)),
+                            Text('23ºC',
+                                style: Styles.textNormalCustom(
+                                    17, Styles.blanco, FontWeight.w600))
+                          ]),
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Presión',
+                                style: Styles.textNormalCustom(
+                                    14, Styles.blanco, FontWeight.w300)),
+                            Text('1028,28 hPa',
+                                style: Styles.textNormalCustom(
+                                    17, Styles.blanco, FontWeight.w600))
+                          ]),
+                    ],
+                  )),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 20, 0, 10),
+                  child: Row(children: [
+                    Text('Hoy',
+                        style: Styles.textNormalCustom(
+                            20, Styles.blanco, FontWeight.w400))
+                  ]))
             ],
           ))
     ]));
