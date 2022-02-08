@@ -159,7 +159,7 @@ class Wind {
   });
   late final double speed;
   late final int deg;
-  late final double gust;
+  late final double? gust;
 
   Wind.fromJson(Map<String, dynamic> json) {
     speed = json['speed'];

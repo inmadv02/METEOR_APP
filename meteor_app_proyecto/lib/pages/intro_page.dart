@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meteor_app_proyecto/models/location_response.dart';
+
 import 'package:meteor_app_proyecto/styles.dart';
 import 'package:meteor_app_proyecto/utils/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,8 +12,9 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-  List<String> listaCiudades = ["Sevilla", "Londres", "Madrid", "Barcelona"];
-  String ciudadEjemplo = "Sevilla";
+  String ciudadEjemplo = ' ';
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,34 +42,36 @@ class _IntroPageState extends State<IntroPage> {
                     Text('Elige tu ciudad', style: Styles.textTitleCustom(23))),
             Padding(
                 padding: const EdgeInsets.fromLTRB(3, 20, 3, 50),
-                child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    decoration: BoxDecoration(
-                        color: Styles.moradoCard,
-                        borderRadius: BorderRadius.circular(18.0)),
-                    child: DropdownButton(
-                      icon: const Icon(Icons.search,
-                          color: Colors.black, size: 25),
-                      isExpanded: true,
-                      dropdownColor: Styles.moradoCard,
-                      value: ciudadEjemplo,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          ciudadEjemplo = newValue!;
-                        });
-                      },
-                      items: listaCiudades
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      style: Styles.textNormalCustom(
-                          16, Styles.bodyBackground, FontWeight.normal),
-                    ))),
+                child: Form(
+                    key: _formKey,
+                    child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: TextFormField(
+                          controller: textEditingController,
+                          decoration: InputDecoration(
+                              label: const Text("Search"),
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelStyle: Styles.textNormalCustom(
+                                  14, Colors.black, FontWeight.w400),
+                              border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                borderSide:
+                                    BorderSide(color: Styles.moradoCard),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                borderSide: BorderSide(color: Colors.white),
+                              )),
+                          validator: (ciudadEjemplo) {
+                            if (ciudadEjemplo == null ||
+                                ciudadEjemplo.isEmpty) {
+                              return 'Por favor, introduce una ciudad';
+                            }
+                          },
+                        )))),
             SizedBox(
                 width: MediaQuery.of(context).size.width * 0.35,
                 height: MediaQuery.of(context).size.height * 0.06,
@@ -78,8 +81,14 @@ class _IntroPageState extends State<IntroPage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7.0))),
                     ),
-                    onPressed: () => Navigator.pushNamed(context, '/location',
-                        arguments: ciudadEjemplo),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        ciudadEjemplo = textEditingController.text;
+                        PreferenceUtils.setString("ciudad", ciudadEjemplo);
+                        Navigator.pushNamed(context, '/home',
+                            arguments: ciudadEjemplo);
+                      }
+                    },
                     child: Text('Entrar'.toUpperCase(),
                         style: Styles.textNormalCustom(
                             14,

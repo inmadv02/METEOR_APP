@@ -33,8 +33,7 @@ class PreferenceUtils {
 
   static int? getInt(String key) => _prefs.getInt(key);
 
-  static String? getString(String key, String ciudadEjemplo) =>
-      _prefs.getString(key);
+  static String? getString(String key) => _prefs.getString(key);
 
   static List<String>? getStringList(String key) => _prefs.getStringList(key);
 
