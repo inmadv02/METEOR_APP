@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meteor_app_proyecto/models/current_response.dart';
 import 'package:meteor_app_proyecto/models/location_response.dart';
 import 'package:meteor_app_proyecto/pages/intro_page.dart';
 import 'package:meteor_app_proyecto/services/location_service.dart';
@@ -15,19 +16,19 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   late LocationService locationService;
+  late Future<Current> city;
 
   @override
   void initState() {
     locationService = LocationService();
-    locationService.getCityByName(PreferenceUtils.getString("ciudad") ?? ' ');
-    locationService.getCityByLocation();
+    city = locationService
+        .getCityByLocation(PreferenceUtils.getString("ciudad") ?? ' ');
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as String;
-
     return Scaffold(
         backgroundColor: Styles.bodyBackground,
         body: SingleChildScrollView(
@@ -52,7 +53,7 @@ class _LocationPageState extends State<LocationPage> {
                 children: [
                   Padding(
                       padding: const EdgeInsets.fromLTRB(0, 60, 0, 8),
-                      child: Text(args,
+                      child: Text('Sevilla',
                           textAlign: TextAlign.center,
                           style: Styles.textNormalCustom(
                               35, Styles.blanco, FontWeight.w500))),
@@ -65,9 +66,16 @@ class _LocationPageState extends State<LocationPage> {
                       width: MediaQuery.of(context).size.width * 0.45),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                    Text('26ºC',
-                        style: Styles.textNormalCustom(
-                            60, Styles.blanco, FontWeight.w600)),
+                    FutureBuilder<Current>(
+                        future: city,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return _data(snapshot.data!);
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          }
+                          return const CircularProgressIndicator();
+                        }),
                     Padding(
                         padding: const EdgeInsets.all(9.0),
                         child: Column(
@@ -164,4 +172,8 @@ class _LocationPageState extends State<LocationPage> {
               )),
         ])));
   }
+}
+
+Widget _data(Current currentWeather) {
+  return Text(currentWeather.feelsLike.toString());
 }

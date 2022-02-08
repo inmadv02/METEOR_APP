@@ -1,5 +1,5 @@
-class Location {
-  Location({
+class City {
+  City({
     required this.coord,
     required this.weather,
     required this.base,
@@ -28,7 +28,7 @@ class Location {
   late final String name;
   late final int cod;
 
-  Location.fromJson(Map<String, dynamic> json) {
+  City.fromJson(Map<String, dynamic> json) {
     coord = Coord.fromJson(json['coord']);
     weather =
         List.from(json['weather']).map((e) => Weather.fromJson(e)).toList();

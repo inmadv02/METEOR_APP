@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:meteor_app_proyecto/models/current_response.dart';
 import 'package:meteor_app_proyecto/models/location_response.dart';
@@ -16,9 +16,15 @@ class LocationService {
     }
   }*/
 
-  Future<Current> getCityByLocation() async {
+  Future<Current> getCityByLocation(String name) async {
+    var addresses = await Geocoder.local.findAddressesFromQuery(name);
+    var city = addresses.first;
+
+    double lat = city.coordinates.latitude;
+    double lng = city.coordinates.longitude;
+
     final result = await http.get(Uri.parse(
-        'http://api.openweathermap.org/data/2.5/onecall?lat=37.4111818&lon=-5.9763749&appid=00bfbfb7579241d929c5b460be1fc5b3'));
+        'http://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lng&appid=00bfbfb7579241d929c5b460be1fc5b3'));
 
     if (result.statusCode == 200) {
       return Current.fromJson(jsonDecode(result.body));
@@ -27,12 +33,12 @@ class LocationService {
     }
   }
 
-  Future<Location> getCityByName(String name) async {
+  Future<City> getCityByName(String name) async {
     final result = await http.get(Uri.parse(
         'http://api.openweathermap.org/data/2.5/weather?q=$name&appid=00bfbfb7579241d929c5b460be1fc5b3'));
 
     if (result.statusCode == 200) {
-      return Location.fromJson(jsonDecode(result.body));
+      return City.fromJson(jsonDecode(result.body));
     } else {
       throw Exception('No se ha podido obtener la ciudad D:');
     }
