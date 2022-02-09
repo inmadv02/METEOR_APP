@@ -85,6 +85,8 @@ class _IntroPageState extends State<IntroPage> {
                       if (_formKey.currentState!.validate()) {
                         ciudadEjemplo = textEditingController.text;
                         PreferenceUtils.setString("ciudad", ciudadEjemplo);
+                        /* Navigator.pushNamed(context, '/home',
+                            arguments: ciudadEjemplo);*/
                         Navigator.pushNamed(context, '/home',
                             arguments: ciudadEjemplo);
                       }

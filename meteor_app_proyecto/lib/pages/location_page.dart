@@ -16,14 +16,21 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   late LocationService locationService;
-  late Future<Current> city;
+  late City city;
+  late Future<Current> futureCiudad;
 
   @override
   void initState() {
     locationService = LocationService();
-    city = locationService
-        .getCityByLocation(PreferenceUtils.getString("ciudad") ?? ' ');
+    /*city = locationService
+        .getCityLocation(PreferenceUtils.getString("ciudad") ?? ' ');*/
 
+    /*locationService
+        .getCityByName2(PreferenceUtils.getString("ciudad")!)
+        .then((value) => city = value);*/
+
+    futureCiudad = locationService.getCityLocation(
+        PreferenceUtils.getDouble("lat")!, PreferenceUtils.getDouble("lng")!);
     super.initState();
   }
 
@@ -67,7 +74,7 @@ class _LocationPageState extends State<LocationPage> {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                     FutureBuilder<Current>(
-                        future: city,
+                        future: futureCiudad,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return _data(snapshot.data!);
@@ -175,5 +182,5 @@ class _LocationPageState extends State<LocationPage> {
 }
 
 Widget _data(Current currentWeather) {
-  return Text(currentWeather.feelsLike.toString());
+  return Text(currentWeather.temp.toString());
 }

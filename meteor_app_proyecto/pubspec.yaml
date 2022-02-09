@@ -29,10 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_geocoder:
-    git:
-      url: https://github.com/JCKodel/flutter_geocoder.git
-      ref: "7059f6f"
+  
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -44,7 +41,9 @@ dependencies:
   google_maps_flutter: ^2.1.1
   geolocator: ^8.1.1
   geocoding: ^2.0.2
-  geocoder: ^0.2.1
+  flutter_google_places: ^0.3.0
+  package_info_plus_web: ^1.0.4
+
 
 dev_dependencies:
   flutter_test:
