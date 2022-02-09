@@ -60,7 +60,7 @@ class _MapClickBodyState extends State<_MapClickBody> {
         });
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setDouble('lat', pos.latitude);
-        prefs.setDouble('lon', pos.longitude);
+        prefs.setDouble('lng', pos.longitude);
       },
       markers: <Marker>{_createMarker()},
       onLongPress: (LatLng pos) {
