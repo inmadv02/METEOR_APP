@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:meteor_app_proyecto/utils/preferences.dart';
 
 import 'page.dart';
 
@@ -12,96 +14,55 @@ class SettingsPage extends GoogleMapExampleAppPage {
 
   @override
   Widget build(BuildContext context) {
-    return const _MapClickBody();
+    return const _SettingsPage();
   }
 }
 
-class _MapClickBody extends StatefulWidget {
-  const _MapClickBody();
+class _SettingsPage extends StatefulWidget {
+  const _SettingsPage();
 
   @override
-  State<StatefulWidget> createState() => _MapClickBodyState();
+  State<StatefulWidget> createState() => _SettingsPageState();
 }
 
-class _MapClickBodyState extends State<_MapClickBody> {
-  GoogleMapController? mapController;
-  LatLng _lastTap = LatLng(0, 0);
-  LatLng? _lastLongPress;
+class _SettingsPageState extends State<_SettingsPage> {
+  final Completer<GoogleMapController> _controller = Completer();
+  LatLng location = const LatLng(40.712784, -74.005941);
 
-  @override
-  void initState() {
-    super.initState();
-    coordenadas();
-  }
-
-  coordenadas() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getDouble('lat') != null) {
-      double? lat = prefs.getDouble('lat');
-      double? lng = prefs.getDouble('lng');
-      _lastTap = LatLng(lat!, lng!);
-      _kInitialPosition = CameraPosition(target: _lastTap, zoom: 5.0);
-    } else {
-      _kInitialPosition = const CameraPosition(
-          target: LatLng(37.3754865, -6.0250989), zoom: 5.0);
-      return _lastTap = const LatLng(37.3754865, -6.0250989);
-    }
-  }
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
 
   @override
   Widget build(BuildContext context) {
-    final GoogleMap googleMap = GoogleMap(
-      onMapCreated: onMapCreated,
-      initialCameraPosition: _kInitialPosition,
-      onTap: (LatLng pos) async {
-        setState(() {
-          _lastTap = pos;
-          coordenadas();
-        });
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setDouble('lat', pos.latitude);
-        prefs.setDouble('lng', pos.longitude);
-      },
-      markers: <Marker>{_createMarker()},
-      onLongPress: (LatLng pos) {
-        setState(() {
-          _lastLongPress = pos;
-        });
-      },
-    );
+    return Scaffold(
+      body: GoogleMap(
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        onTap: (LatLng posicion) {
+          setState(() {
+            location = posicion;
+          });
 
-    final List<Widget> columnChildren = <Widget>[
-      Padding(
-        padding: const EdgeInsets.only(top: 239.0, bottom: 40.0),
-        child: Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 300,
-            child: googleMap,
-          ),
-        ),
-      ),
-    ];
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Column(
-            children: columnChildren,
-          )
-        ],
+          PreferenceUtils.setDouble("lat", posicion.latitude);
+          PreferenceUtils.setDouble("lon", posicion.longitude);
+        },
+        markers: <Marker>{_createMarker()},
+        onLongPress: (LatLng posicion) {
+          setState(() {
+            location = posicion;
+          });
+          PreferenceUtils.setDouble("lat", posicion.latitude);
+          PreferenceUtils.setDouble("lon", posicion.longitude);
+        },
       ),
     );
-  }
-
-  void onMapCreated(GoogleMapController controller) async {
-    setState(() {
-      mapController = controller;
-    });
   }
 
   Marker _createMarker() {
-    return Marker(markerId: const MarkerId("marker"), position: _lastTap);
+    return Marker(markerId: const MarkerId("marker"), position: location);
   }
 }

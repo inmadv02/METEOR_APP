@@ -18,19 +18,17 @@ class _LocationPageState extends State<LocationPage> {
   late LocationService locationService;
   late City city;
   late Future<Current> futureCiudad;
+  late double lat, lon;
 
   @override
   void initState() {
     locationService = LocationService();
-    /*city = locationService
-        .getCityLocation(PreferenceUtils.getString("ciudad") ?? ' ');*/
 
-    /*locationService
-        .getCityByName2(PreferenceUtils.getString("ciudad")!)
-        .then((value) => city = value);*/
+    lat = PreferenceUtils.getDouble("lat") ?? 0;
+    lon = PreferenceUtils.getDouble("lon") ?? 0;
 
-    futureCiudad = locationService.getCityLocation(
-        PreferenceUtils.getDouble("lat")!, PreferenceUtils.getDouble("lng")!);
+    futureCiudad = locationService.getCityLocation(lat, lon);
+
     super.initState();
   }
 
