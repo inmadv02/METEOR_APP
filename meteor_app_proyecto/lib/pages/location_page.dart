@@ -30,7 +30,7 @@ class _LocationPageState extends State<LocationPage> {
         .then((value) => city = value);*/
 
     futureCiudad = locationService.getCityLocation(
-        PreferenceUtils.getDouble("lat")!, PreferenceUtils.getDouble("lng")!);
+        PreferenceUtils.getDouble("lat")!, PreferenceUtils.getDouble("lon")!);
     super.initState();
   }
 
