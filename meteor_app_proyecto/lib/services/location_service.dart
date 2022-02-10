@@ -49,4 +49,15 @@ class LocationService {
       throw Exception('No se ha podido obtener la ciudad D:');
     }
   }
+
+  Future<WeatherResponse> getHourlyWeather(double lat, double lon) async {
+    final result = await http.get(Uri.parse(
+        'http://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&appid=00bfbfb7579241d929c5b460be1fc5b3&units=metric'));
+
+    if (result.statusCode == 200) {
+      return WeatherResponse.fromJson(jsonDecode(result.body));
+    } else {
+      throw Exception('No se ha podido obtener la ciudad D:');
+    }
+  }
 }

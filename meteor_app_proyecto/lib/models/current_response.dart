@@ -1,5 +1,5 @@
-class AutoGenerate {
-  AutoGenerate({
+class WeatherResponse {
+  WeatherResponse({
     required this.lat,
     required this.lon,
     required this.timezone,
@@ -18,7 +18,7 @@ class AutoGenerate {
   late final List<Hourly>? hourly;
   late final List<Daily>? daily;
 
-  AutoGenerate.fromJson(Map<String, dynamic> json) {
+  WeatherResponse.fromJson(Map<String, dynamic> json) {
     lat = json['lat'];
     lon = json['lon'];
     timezone = json['timezone'];
