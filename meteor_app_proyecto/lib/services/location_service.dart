@@ -28,12 +28,12 @@ class LocationService {
     }
   }
 
-  Future<Current> getCityLocation(double lat, double lon) async {
+  Future<City> getCityLocation(double lat, double lon) async {
     final result = await http.get(Uri.parse(
-        'http://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&appid=00bfbfb7579241d929c5b460be1fc5b3'));
+        'http://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=00bfbfb7579241d929c5b460be1fc5b3&units=metric'));
 
     if (result.statusCode == 200) {
-      return Current.fromJson(jsonDecode(result.body));
+      return City.fromJson(jsonDecode(result.body));
     } else {
       throw Exception('No se ha podido obtener la ciudad D`:');
     }
