@@ -12,10 +12,6 @@ class IntroPage extends StatefulWidget {
 }
 
 class _IntroPageState extends State<IntroPage> {
-  String ciudadEjemplo = ' ';
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController textEditingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,41 +33,9 @@ class _IntroPageState extends State<IntroPage> {
                 padding: const EdgeInsets.fromLTRB(3, 3, 3, 50),
                 child: Text('Meteor'.toUpperCase(), style: Styles.textLogo)),
             Padding(
-                padding: const EdgeInsets.fromLTRB(3, 3, 3, 20),
-                child:
-                    Text('Elige tu ciudad', style: Styles.textTitleCustom(23))),
-            Padding(
-                padding: const EdgeInsets.fromLTRB(3, 20, 3, 50),
-                child: Form(
-                    key: _formKey,
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: TextFormField(
-                          controller: textEditingController,
-                          decoration: InputDecoration(
-                              label: const Text("Search"),
-                              filled: true,
-                              fillColor: Colors.white,
-                              labelStyle: Styles.textNormalCustom(
-                                  14, Colors.black, FontWeight.w400),
-                              border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12.0)),
-                                borderSide:
-                                    BorderSide(color: Styles.moradoCard),
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12.0)),
-                                borderSide: BorderSide(color: Colors.white),
-                              )),
-                          validator: (ciudadEjemplo) {
-                            if (ciudadEjemplo == null ||
-                                ciudadEjemplo.isEmpty) {
-                              return 'Por favor, introduce una ciudad';
-                            }
-                          },
-                        )))),
+                padding: const EdgeInsets.fromLTRB(3, 3, 3, 50),
+                child: Text('Bienvenido a nuestra app',
+                    style: Styles.textTitleCustom(23))),
             SizedBox(
                 width: MediaQuery.of(context).size.width * 0.35,
                 height: MediaQuery.of(context).size.height * 0.06,
@@ -82,14 +46,7 @@ class _IntroPageState extends State<IntroPage> {
                           borderRadius: BorderRadius.circular(7.0))),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        ciudadEjemplo = textEditingController.text;
-                        PreferenceUtils.setString("ciudad", ciudadEjemplo);
-                        /* Navigator.pushNamed(context, '/home',
-                            arguments: ciudadEjemplo);*/
-                        Navigator.pushNamed(context, '/home',
-                            arguments: ciudadEjemplo);
-                      }
+                      Navigator.pushNamed(context, '/home');
                     },
                     child: Text('Entrar'.toUpperCase(),
                         style: Styles.textNormalCustom(

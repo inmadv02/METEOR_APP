@@ -30,7 +30,7 @@ class _LocationPageState extends State<LocationPage> {
     lon = PreferenceUtils.getDouble("lon") ?? 0;
 
     futureCiudad = locationService.getCityLocation(lat, lon);
-    hourlyWeather = locationService.getHourlyWeather(lat, lon);
+    hourlyWeather = locationService.getWeather(lat, lon);
 
     super.initState();
   }
@@ -74,7 +74,10 @@ class _LocationPageState extends State<LocationPage> {
                               child: Text(_date(snapshot.data!.dt),
                                   style: Styles.textNormalCustom(
                                       16, Styles.blanco, FontWeight.w300))),
-                          Image.asset('assets/icons/09n.png',
+                          Image.asset(
+                              'assets/icons/' +
+                                  snapshot.data!.weather![0].icon! +
+                                  '.png',
                               width: MediaQuery.of(context).size.width * 0.45),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -263,7 +266,30 @@ class _LocationPageState extends State<LocationPage> {
                         }),
                   ],
                 )
-              ]))
+              ])),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(18, 6, 10, 10),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Resto de la semana',
+                        style: Styles.textNormalCustom(
+                            20, Styles.blanco, FontWeight.w400)),
+                    FutureBuilder<WeatherResponse>(
+                        future: hourlyWeather,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return _weeklyWeatherList(snapshot.data!.daily!);
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          }
+
+                          // By default, show a loading spinner.
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }),
+                  ]))
         ])));
   }
 
@@ -296,8 +322,12 @@ class _LocationPageState extends State<LocationPage> {
                 height: MediaQuery.of(context).size.height * 0.7,
                 child: Row(children: [
                   Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset('assets/icons/09n.png'),
+                    padding: const EdgeInsets.fromLTRB(13, 6, 6, 6),
+                    child: Image.asset(
+                        'assets/icons/' +
+                            hourly.weather![0].icon!.toString() +
+                            '.png',
+                        width: MediaQuery.of(context).size.width * 0.12),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -316,6 +346,69 @@ class _LocationPageState extends State<LocationPage> {
                     ),
                   )
                 ]))));
+  }
+
+  Widget _weeklyWeatherList(List<Daily> weeklyWeatherList) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
+      itemCount: weeklyWeatherList.length,
+      itemBuilder: (context, index) {
+        return _weeklyWeatherItem(weeklyWeatherList.elementAt(index));
+      },
+    );
+  }
+
+  Widget _weeklyWeatherItem(Daily daily) {
+    return Card(
+        color: Styles.moradoCard,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: InkWell(
+            splashColor: Colors.blue.withAlpha(30),
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 80,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(13, 6, 6, 6),
+                        child: Image.asset(
+                            'assets/icons/' +
+                                daily.weather![0].icon!.toString() +
+                                '.png',
+                            width: MediaQuery.of(context).size.width * 0.12),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(_date(daily.dt),
+                            style: Styles.textNormalCustom(
+                                13, Colors.black, FontWeight.normal)),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(6, 7, 6, 5),
+                              child: Text(
+                                'Máx: ' +
+                                    daily.temp!.max.toStringAsFixed(0) +
+                                    ' ºC',
+                                style: Styles.textNormalCustom(
+                                    15, Colors.black, FontWeight.bold),
+                              )),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(6, 3, 6, 3),
+                              child: Text(
+                                'Mín: ' +
+                                    daily.temp!.min.toStringAsFixed(0) +
+                                    ' ºC',
+                                style: Styles.textNormalCustom(
+                                    15, Colors.black, FontWeight.bold),
+                              )),
+                        ],
+                      ),
+                    ]))));
   }
 
   String _date(int dt) {
